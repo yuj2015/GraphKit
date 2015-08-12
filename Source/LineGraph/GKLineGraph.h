@@ -26,22 +26,36 @@
 #import <UIKit/UIKit.h>
 
 @protocol GKLineGraphDataSource;
+@protocol GKLineGraphDelegate;
 
-@interface GKLineGraph : UIView
+@interface GKLineGraph : UIView<UIScrollViewDelegate>
 
 @property (nonatomic, assign) BOOL animated;
 @property (nonatomic, assign) CFTimeInterval animationDuration;
 
-@property (nonatomic, weak) IBOutlet id<GKLineGraphDataSource> dataSource;
+@property (nonatomic, assign) id<GKLineGraphDataSource> dataSource;
+@property (nonatomic, assign) id<GKLineGraphDelegate> delegate;
 
 @property (nonatomic, assign) CGFloat lineWidth;
 @property (nonatomic, assign) CGFloat margin;
+@property (nonatomic, assign) CGFloat dotRadius;//圆点半径
+@property (nonatomic, assign) CGFloat perPageCount;//一个屏幕展示的数据个数
+
+@property (nonatomic, assign) NSInteger tag;
 
 @property (nonatomic, assign) NSInteger valueLabelCount;
 //@property (nonatomic, strong) NSNumber *maxValue;
 
-@property (nonatomic, assign) CGFloat *minValue;
+@property (nonatomic, assign) CGFloat minValue;
+@property (nonatomic, assign) CGFloat maxValue;
 @property (nonatomic, assign) BOOL startFromZero;
+
+@property (nonatomic, strong) UIScrollView *scrollView;
+
+@property (nonatomic) BOOL alwaysShowLastData;
+
+@property (nonatomic) BOOL showZeroData;
+
 
 - (void)draw;
 - (void)reset;
@@ -53,10 +67,25 @@
 - (NSInteger)numberOfLines;
 - (UIColor *)colorForLineAtIndex:(NSInteger)index;
 - (NSArray *)valuesForLineAtIndex:(NSInteger)index;
+- (NSArray *)labelsForValue;
+- (NSArray *)titleLabelValue;
+
 
 @optional
 - (CFTimeInterval)animationDurationForLineAtIndex:(NSInteger)index;
-
 - (NSString *)titleForLineAtIndex:(NSInteger)index;
 
 @end
+
+@protocol GKLineGraphDelegate <NSObject>
+
+@optional
+- (IBAction)clickCircle:(id)sender;
+
+@end
+
+
+
+
+
+
